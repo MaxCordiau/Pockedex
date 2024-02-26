@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import Listbox
 from tkinter import ttk
 from tkinter import Button
 import pickle
@@ -64,7 +65,7 @@ class Pokemon_builder:
             messagebox.showinfo("Sauvegarde", "Le pokémon à était sauvegardée")
     def charger():
         with open("pokemon.txt", "rb") as fichier:
-            liste_pokemon = pickle.load(fichier)
+            sav_pokemon = pickle.load(fichier)
             messagebox.showinfo("Chargement", "Le pokémon à était chargée")
 
         liste_pokemon.append(Pokemon_builder.pokemeon_entry)
@@ -72,10 +73,13 @@ class Pokemon_builder:
         sauvegarder = tk.Button(text="Sauvegarder", command=Pokemon_builder.sauvegarder_pokemon)
         sauvegarder.pack()
 
-    def afficher():
-        for pokemon in liste_pokemon:
-            liste.print(tk.END, pokemon)
-        liste.pack()
+
+
+
+    # def afficher():
+    #     for pokemon in liste_pokemon:
+    #         liste_pokemon.insert(tk.END, pokemon)
+    #     liste_pokemon.pack()
 
 
 boutton_ajouter = tk.Button(fenetre, text="Ajouter", command=Pokemon_builder.pokemeon_entry)
@@ -88,35 +92,40 @@ boutton_charger = tk.Button(fenetre, text="Charger", command=Pokemon_builder.cha
 boutton_charger.pack()
 
 # afficher la liste des pockemon
-boutton_afficher = tk.Button(fenetre, text="Afficher", command=Pokemon_builder.afficher)
-boutton_afficher.pack()
+# boutton_afficher = tk.Button(fenetre, text="Afficher", command=Pokemon_builder.afficher)
+# boutton_afficher.pack()
+tk.Listbox(fenetre)
 
-liste_pokemon = [
-    dict(
-        nom= "Salameche",
-        type="Feu",
-        attaque="Flammeche",
-        force="Brasier",
-        faiblesses="Eau"
-    ),
-    dict(
-        nom=nom_entry.get(),
-        type=type_entry.get(),
-        attaque=attaque_entry.get(),
-        force=force_entry.get(),
-        faiblesses=faiblesses_entry.get()
-    ),
-]
+# liste
+liste_pokemon = Listbox(fenetre)
+# liste_pokemon.insert(1, "Python")
+liste_pokemon.pack()
 
-
-
-
-with open('liste_pokemon.pickle', 'wb') as f:
-    pickle.dump(liste_pokemon, f, pickle.HIGHEST_PROTOCOL)
-
-# afficher les pockemons
+# liste_pokemon = [
+#     dict(
+#         nom= "Salameche",
+#         type="Feu",
+#         attaque="Flammeche",
+#         force="Brasier",
+#         faiblesses="Eau"
+#     ),
+#     dict(
+#         nom=nom_entry.get(),
+#         type=type_entry.get(),
+#         attaque=attaque_entry.get(),
+#         force=force_entry.get(),
+#         faiblesses=faiblesses_entry.get()
+#     ),
+# ]
 
 
-liste = tk.Listbox(fenetre)
+
+# with open('liste_pokemon.pickle.txt', 'wb') as f:
+#     pickle.dump(liste_pokemon, f, pickle.HIGHEST_PROTOCOL)
+
+# # afficher les pockemons
+
+
+# liste = tk.Listbox(fenetre)
 
 fenetre.mainloop()
