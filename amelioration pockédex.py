@@ -7,15 +7,16 @@ class PokedexApp:
         self.master = master
         self.master.title("Pokédex")
         self.master.geometry("600x400")
+        self.pokemon_types = ["Feu", "Eau", "Plante"]  # Types de Pokémon possibles
+
+        # Couleurs pour les types de Pokémon
+        self.type_colors = {"Feu": "#FF5733", "Eau": "#3399FF", "Plante": "#33CC33"}
 
         # Initialisation de la liste des Pokémon
         self.pokemon_list = []
 
         # Création des widgets
         self.create_widgets()
-
-        # Charger les données depuis le fichier lors du démarrage de l'application
-        self.load_data()
 
     def create_widgets(self):
         # Labels et Entries pour ajouter un nouveau Pokémon
@@ -38,31 +39,27 @@ class PokedexApp:
         btn_add_pokemon = tk.Button(self.master, text="Ajouter Pokémon", font=("Arial", 12), command=self.add_new_pokemon)
         btn_add_pokemon.place(x=50, y=260)
 
-        # Bouton pour supprimer un Pokémon sélectionné
-        btn_remove_pokemon = tk.Button(self.master, text="Supprimer Pokémon", font=("Arial", 12), command=self.remove_selected_pokemon)
-        btn_remove_pokemon.place(x=50, y=300)
-
-        # Bouton pour créer un Pokémon aléatoire
-        btn_random_pokemon = tk.Button(self.master, text="Créer Pokémon aléatoire", font=("Arial", 12), command=self.create_random_pokemon)
-        btn_random_pokemon.place(x=50, y=340)
+        # Bouton pour combattre
+        btn_fight = tk.Button(self.master, text="Combattre", font=("Arial", 12), command=self.start_combat)
+        btn_fight.place(x=50, y=300)
 
         # Liste des Pokémon
         self.listbox_pokemon = tk.Listbox(self.master, font=("Arial", 12), width=25)
         self.listbox_pokemon.place(x=300, y=50)
 
-        # Afficher les Pokémon dans la Listbox
-        self.listbox_pokemon.bind("<<ListboxSelect>>", self.show_pokemon_info)
+        # Chargement des données depuis le fichier
+        self.load_data()
 
     def load_data(self):
         try:
             with open("pokemon.txt", "r") as file:
                 for line in file:
-                    # Ignorer les lignes vides ou mal formatées
                     if line.strip():
                         try:
                             nom, type_, capacites = line.strip().split(",", 2)
                             self.pokemon_list.append({"nom": nom, "type": type_, "capacites": capacites.split(",")})
                             self.listbox_pokemon.insert(tk.END, nom)
+                            self.listbox_pokemon.itemconfig(tk.END, bg=self.type_colors.get(type_, "white"))
                         except ValueError:
                             messagebox.showwarning("Format de ligne incorrect", f"Ignorer la ligne mal formatée : {line.strip()}")
         except FileNotFoundError:
@@ -81,40 +78,40 @@ class PokedexApp:
         new_pokemon = {"nom": nom, "type": type_, "capacites": capacites}
         self.pokemon_list.append(new_pokemon)
         self.listbox_pokemon.insert(tk.END, nom)
+        self.listbox_pokemon.itemconfig(tk.END, bg=self.type_colors.get(type_, "white"))
 
         # Sauvegarder les données après l'ajout
         self.save_data()
 
-    def remove_selected_pokemon(self):
-        index = self.listbox_pokemon.curselection()[0]
-        self.listbox_pokemon.delete(index)
-        del self.pokemon_list[index]
+    def start_combat(self):
+        if len(self.listbox_pokemon.curselection()) != 2:
+            messagebox.showerror("Erreur", "Veuillez sélectionner exactement deux Pokémon pour le combat.")
+            return
 
-        # Sauvegarder les données après la suppression
-        self.save_data()
+        index1, index2 = self.listbox_pokemon.curselection()
+        pokemon1 = self.pokemon_list[index1]
+        pokemon2 = self.pokemon_list[index2]
 
-    def create_random_pokemon(self):
-        # Liste de noms, types et capacités possibles
-        names = ["Pikachu", "Bulbasaur", "Charmander", "Squirtle", "Jigglypuff", "Snorlax", "Gyarados", "Eevee", "Mewtwo", "Dragonite"]
-        types_ = ["Feu", "Eau", "Plante", "Electrique", "Poison", "Vol", "Psy", "Insecte", "Roche", "Acier"]
-        abilities = ["Charge", "Vive-Attaque", "Lance-Flammes", "Hydrocanon", "Tonnerre", "Tranch'Herbe", "Morsure", "Poing-Eclair", "Brouillard", "Bomb'Beurk"]
+        winner = self.determine_winner(pokemon1, pokemon2)
+        if winner is None:
+            messagebox.showinfo("Résultat", "Match nul ! Les deux Pokémon ont des types et des capacités équivalentes.")
+        else:
+            messagebox.showinfo("Résultat", f"Le Pokémon gagnant est {winner['nom']} de type {winner['type']} !")
 
-        # Générer un Pokémon aléatoire
-        random_name = random.choice(names)
-        random_type = random.choice(types_)
-        random_abilities = random.sample(abilities, random.randint(1, 3))  # Choisir aléatoirement jusqu'à 3 capacités
+    def determine_winner(self, pokemon1, pokemon2):
+        type1 = pokemon1["type"]
+        type2 = pokemon2["type"]
 
-        # Ajouter le Pokémon à la liste et à la listebox
-        self.pokemon_list.append({"nom": random_name, "type": random_type, "capacites": random_abilities})
-        self.listbox_pokemon.insert(tk.END, random_name)
+        # Définissez les forces et les faiblesses de chaque type de Pokémon
+        type_strengths = {"Feu": "Plante", "Eau": "Feu", "Plante": "Eau"}
 
-        # Sauvegarder les données après l'ajout
-        self.save_data()
-
-    def show_pokemon_info(self, event):
-        index = self.listbox_pokemon.curselection()[0]
-        selected_pokemon = self.pokemon_list[index]
-        messagebox.showinfo("Informations Pokémon", f"Nom: {selected_pokemon['nom']}\nType: {selected_pokemon['type']}\nCapacités: {', '.join(selected_pokemon['capacites'])}")
+        # Vérifiez les forces et les faiblesses pour déterminer le gagnant
+        if type1 == type2:
+            return None  # Match nul
+        elif type2 in type_strengths.get(type1, []):
+            return pokemon1
+        else:
+            return pokemon2
 
 def main():
     root = tk.Tk()
@@ -123,3 +120,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
