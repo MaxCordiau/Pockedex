@@ -6,7 +6,7 @@ class PokedexApp:
     def __init__(self, master):
         self.master = master
         self.master.title("Pokédex")
-        self.master.geometry("750x680")
+        self.master.geometry("600x500")
         self.master.configure(bg="#440000")  # Couleur de fond foncée
 
         self.pokemon_types = ["Feu", "Eau", "Plante"]  # Types de Pokémon possibles
