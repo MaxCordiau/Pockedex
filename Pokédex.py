@@ -209,3 +209,133 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+# CORRECTION :
+
+# import tkinter as tk
+# from tkinter import messagebox
+# import pickle
+# fenetre = tk.Tk()
+# fenetre.title("Pokédex")
+
+# class Pokemon:
+#     def __init__(self, nom, type, capacites):
+#         """
+#         Crée une instance de la classe Pokemon.
+
+#         Args:
+#             nom (str): Le nom du Pokémon.
+#             type (str): Le type du Pokémon.
+#             capacites (list): La liste des capacités du Pokémon.
+#         """
+#         self.type = type
+#         self.nom = nom
+#         self.capacites = capacites
+
+
+# def sauvegarder_pokedex():
+#     """
+#     Sauvegarde le pokedex dans un fichier binaire.
+
+#     Cette fonction utilise le module pickle pour sérialiser le pokedex
+#     et le sauvegarder dans un fichier binaire 'pokedex.pkl'.
+
+#     Args:
+#         Aucun argument requis.
+
+#     Returns:
+#         Aucune valeur de retour.
+#     """
+#     with open('pokedex.pkl', 'wb') as f:
+#         pickle.dump(pokedex, f)
+
+# def charger_pokedex():
+#     """
+#     Charge le pokedex à partir du fichier 'pokedex.pkl' s'il existe.
+#     Si le fichier n'est pas trouvé, renvoie une liste vide.
+
+#     Returns:
+#         list: Le pokedex chargé à partir du fichier ou une liste vide.
+#     """
+#     try:
+#         with open('pokedex.pkl', 'rb') as f:
+#             return pickle.load(f)
+#     except FileNotFoundError:
+#         return []
+
+# def afficher_details():
+#     """
+#     Affiche les détails du pokemon sélectionné.
+
+#     Parameters:
+#     None
+
+#     Returns:
+#     None
+#     """
+#     index = list_pokemon.curselection()
+#     if index:
+#         # Chercher le pokemon dans la liste en récupérant le nom grâce à l'index
+#         pokemon = pokedex[index[0]]
+#         messagebox.showinfo("Détail du pokemon :", f"Nom : {pokemon.nom} \n Type : {pokemon.type} \n Capacités : {pokemon.capacites}")
+#     else:
+#         messagebox.showwarning("Aucune sélection", "Aucun pokemon sélectionné")
+
+# def ajouter_pokemon():
+#     """
+#     Ajoute un nouveau Pokémon à la liste du Pokédex.
+
+#     Cette fonction récupère les informations du Pokémon à partir des champs de saisie,
+#     crée une instance de la classe Pokemon avec ces informations, puis l'ajoute à la liste du Pokédex.
+#     Ensuite, le nom du Pokémon est inséré dans la listebox pour affichage.
+#     La liste du Pokédex est ensuite sauvegardée dans un fichier.
+#     Enfin, une boîte de dialogue est affichée pour informer l'utilisateur que le Pokémon a été ajouté avec succès.
+#     """
+#     nom = entry_nom.get()
+#     type_pokemon = entry_type.get()
+#     capacite = entry_capacite.get()
+#     # On ajoute le pokemon a la liste
+#     pokedex.append(Pokemon(nom, type_pokemon, capacite))
+#     # Ajoute le pokemon sur la listebox
+#     list_pokemon.insert(tk.END, nom)
+#     # Sauvegarde la liste nouvellement mise à jour
+#     sauvegarder_pokedex()
+#     # Petit retour visuel à l'utilisateur
+#     messagebox.showinfo("Pokemon ajouté !", "Le pokemon a été ajouté avec succès")
+
+# pokedex = charger_pokedex()
+
+# # Liste de pokemon
+# list_pokemon = tk.Listbox(fenetre)
+# # Peupler la liste des pokemons
+# for pokemon in pokedex:
+#     list_pokemon.insert(tk.END, pokemon.nom)
+# list_pokemon.pack()
+
+# # Bouton pour afficher le détail d'un pokemon
+# bouton_detail = tk.Button(fenetre, text="Afficher les détails", command=afficher_details)
+# bouton_detail.pack()
+
+# # Formulaire pour ajouter un nouveau pokémon
+# label_nom = tk.Label(fenetre, text="Nom du pokemon : ")
+# label_nom.pack()
+# entry_nom = tk.Entry(fenetre)
+# entry_nom.pack()
+
+# label_type = tk.Label(fenetre, text="Type du pokemon : ")
+# label_type.pack()
+# entry_type = tk.Entry(fenetre)
+# entry_type.pack()
+
+# label_capacite = tk.Label(fenetre, text="Capacités du pokemon : ")
+# label_capacite.pack()
+# entry_capacite = tk.Entry(fenetre)
+# entry_capacite.pack()
+
+# bouton_ajouter = tk.Button(fenetre, text="Ajouter", command=ajouter_pokemon)
+# bouton_ajouter.pack()
+
+
+# fenetre.mainloop()
