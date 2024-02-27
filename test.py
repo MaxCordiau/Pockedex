@@ -114,26 +114,29 @@ class PokedexApp:
         if len(selected_index) != 1:
             messagebox.showerror("Erreur", "Veuillez sélectionner un Pokémon pour le combat.")
             return
-
+    
         index = selected_index[0]
         player_pokemon = self.pokemon_list[index]
-
+    
         computer_pokemon = random.choice([pokemon for pokemon in self.pokemon_list if pokemon != player_pokemon])
-
+    
         messagebox.showinfo("Combat", f"Votre Pokémon: {player_pokemon['nom']} (Niveau: {player_pokemon['niveau']}, HP: {player_pokemon['hp']})\nPokémon de l'ordinateur: {computer_pokemon['nom']} (Niveau: {computer_pokemon['niveau']}, HP: {computer_pokemon['hp']})")
-
+    
         player_hp = player_pokemon['hp']
         computer_hp = computer_pokemon['hp']
-
+    
         while player_hp > 0 and computer_hp > 0:
             player_attack = self.choose_attack(player_pokemon)
+            if not player_attack:  # Vérifie si une attaque a été choisie
+                continue  # Si aucune attaque n'a été choisie, continue à attendre
+            
             player_damage = random.randint(10, 30) + (player_pokemon['niveau'] * 5)
             computer_hp -= player_damage
             player_pokemon['hp'] = player_hp
             self.update_listbox_hp()
             messagebox.showinfo("Combat", f"Votre Pokémon lance {player_attack} et inflige {player_damage} dégâts!")
             messagebox.showinfo("Combat", f"Points de vie restants de l'ordinateur: {computer_hp}")
-
+    
             computer_attack = random.choice(computer_pokemon['capacites'])
             computer_damage = random.randint(10, 30) + (computer_pokemon['niveau'] * 5)
             player_hp -= computer_damage
@@ -141,7 +144,7 @@ class PokedexApp:
             self.update_listbox_hp()
             messagebox.showinfo("Combat", f"Le Pokémon de l'ordinateur lance {computer_attack} et inflige {computer_damage} dégâts!")
             messagebox.showinfo("Combat", f"Vos points de vie restants: {player_hp}")
-
+    
         if player_hp <= 0:
             messagebox.showinfo("Combat", "Votre Pokémon a été vaincu. L'ordinateur gagne!")
             self.remove_pokemon(player_pokemon)
@@ -152,6 +155,7 @@ class PokedexApp:
             self.update_listbox_hp()
         else:
             messagebox.showinfo("Combat", "Le combat se termine par une égalité!")
+
 
     def choose_attack(self, pokemon):
         attack_options = pokemon['capacites']
